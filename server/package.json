@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/main.ts",
     "import:data": "ts-node src/utils/import-data.ts",
-    "test": "echo \"Error: no tests specified\" && exit 1"
+    "test": "jest --runInBand --passWithNoTests --watch --coverage"
   },
   "keywords": [],
   "author": "",
@@ -21,10 +21,15 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "@babel/preset-typescript": "^7.28.5",
+    "@jest/globals": "^30.2.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.4",
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.9.1",
+    "babel-jest": "^30.2.0",
     "jest": "^30.2.0",
     "mongodb-memory-server": "^10.2.3",
     "nodemon": "^3.1.10",

@@ -7,13 +7,24 @@ import {AppConfig, loadConfig} from "../config/config";
 
 class Server {
     public app: express.Application;
-    private readonly cfg: AppConfig;
+    private cfg: AppConfig;
 
-    constructor(cfg: AppConfig = loadConfig()) {
+    constructor() {
+        this.cfg = loadConfig();
         this.app = express();
-        this.cfg = cfg;
         this.setupMiddlewares();
         this.setUpRoutes();
+    }
+
+    public updateConfig(cfg: AppConfig): void {
+        this.cfg = cfg;
+    }
+
+    public resetForTesting(): void {
+        // Reset mongoose connection state if needed
+        if (mongoose.connection.readyState !== 0) {
+            console.warn('Warning: Database connection still active. Call disconnectFromDatabase() first.');
+        }
     }
 
     setupMiddlewares(): void {
@@ -25,6 +36,10 @@ class Server {
 
     setUpRoutes(): void {
         // Define your routes here
+        this.app.get('/health', (req, res) => {
+            console.log("Health check requested");
+            res.status(200).send({status: 'OK'});
+        })
     }
 
     async connectToDatabase(): Promise<void> {
@@ -46,10 +61,6 @@ class Server {
     }
 
     public start(): void {
-        this.app.get("/", (req, res) => {
-            res.send("Hello, World!");
-        });
-
         this.app.listen(this.cfg.PORT, () => {
             console.log(`Server is running on http://localhost:${this.cfg.PORT}`);
         });
