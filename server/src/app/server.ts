@@ -3,16 +3,15 @@ import morgan from "morgan";
 import cors from 'cors';
 import mongoose, {connect, ConnectOptions} from 'mongoose';
 import "dotenv/config";
+import {AppConfig, loadConfig} from "../config/config";
 
 class Server {
     public app: express.Application;
-    private readonly PORT: number | string;
-    private readonly MONGODB_URI: string;
+    private readonly cfg: AppConfig;
 
-    constructor() {
+    constructor(cfg: AppConfig = loadConfig()) {
         this.app = express();
-        this.PORT = process.env.PORT || 3000;
-        this.MONGODB_URI = process.env.MONGODB_SRV || "mongodb://localhost:27017/mydatabase"
+        this.cfg = cfg;
         this.setupMiddlewares();
         this.setUpRoutes();
     }
@@ -32,14 +31,12 @@ class Server {
         try {
             console.log("Connecting to database...");
             const clientOptions: ConnectOptions = {serverApi: {version: '1', strict: true, deprecationErrors: true}};
-            await connect(this.MONGODB_URI, clientOptions);
+            await connect(this.cfg.MONGODB_SRV, clientOptions);
             await mongoose.connection.db?.admin().command({ping: 1});
             console.info("Connected to MongoDB Successfully");
         } catch (error) {
             console.error("Error connecting to MongoDB:", error);
             throw error;
-        } finally {
-            await this.disconnectFromDatabase()
         }
     }
 
@@ -53,8 +50,8 @@ class Server {
             res.send("Hello, World!");
         });
 
-        this.app.listen(this.PORT, () => {
-            console.log(`Server is running on http://localhost:${this.PORT}`);
+        this.app.listen(this.cfg.PORT, () => {
+            console.log(`Server is running on http://localhost:${this.cfg.PORT}`);
         });
     }
 }
