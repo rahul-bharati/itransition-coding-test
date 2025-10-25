@@ -4,6 +4,7 @@ import cors from 'cors';
 import mongoose, {connect, ConnectOptions} from 'mongoose';
 import "dotenv/config";
 import {AppConfig, loadConfig} from "../config/config";
+import tableConfigRoutes from "../routes/table-config.routes";
 
 class Server {
     public app: express.Application;
@@ -40,6 +41,10 @@ class Server {
             console.log("Health check requested");
             res.status(200).send({status: 'OK'});
         })
+
+        // Mount table-config routes
+        this.app.use('/table-config', tableConfigRoutes);
+
     }
 
     async connectToDatabase(): Promise<void> {
