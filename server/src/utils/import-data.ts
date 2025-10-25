@@ -27,6 +27,9 @@ type ImportOptions = {
     batchSize?: number;
     pauseMs?: number;
     upsert?: boolean;
+    // when true, importData will assume a mongoose connection is already established
+    // and will not call mongoose.connect() or mongoose.disconnect().
+    reuseConnection?: boolean;
 }
 
 const loadDataFromFile = async (filePath: string): Promise<IDrug[]> => {
@@ -48,8 +51,9 @@ export const importData = async (options: ImportOptions = {}): Promise<void> => 
     const batchSize = options.batchSize || DEFAULT_BATCH_SIZE;
     const pauseMs = typeof options.pauseMs === 'number' ? options.pauseMs : DEFAULT_PAUSE_MS;
     const upsert = !!options.upsert;
+    const reuseConnection = !!options.reuseConnection;
 
-    await connectToDatabase();
+    if (!reuseConnection) await connectToDatabase();
 
     try {
         const data = await loadDataFromFile(filePath);
@@ -125,18 +129,23 @@ export const importData = async (options: ImportOptions = {}): Promise<void> => 
         throw err;
     } finally {
         try {
-            await mongoose.disconnect();
+            if (!reuseConnection) await mongoose.disconnect();
         } catch (e) {
             console.warn('Disconnect error:', e);
         }
     }
 };
 
-(async () => {
-    try {
-        await importData();
-        console.log("Data import completed successfully.");
-    } catch (err) {
-        console.error("Data import failed:", err);
-    }
-})()
+// Only run the importer automatically when this file is executed directly (e.g. `ts-node src/utils/import-data.ts`).
+// This prevents the module from creating connections when it's imported by tests.
+if (typeof require !== 'undefined' && require.main === module) {
+    (async () => {
+        try {
+            await importData();
+            console.log("Data import completed successfully.");
+        } catch (err) {
+            console.error("Data import failed:", err);
+            process.exit(1);
+        }
+    })();
+}

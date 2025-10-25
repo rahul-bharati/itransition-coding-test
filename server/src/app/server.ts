@@ -5,6 +5,7 @@ import mongoose, {connect, ConnectOptions} from 'mongoose';
 import "dotenv/config";
 import {AppConfig, loadConfig} from "../config/config";
 import tableConfigRoutes from "../routes/table-config.routes";
+import drugRoutes from "../routes/drug.routes";
 
 class Server {
     public app: express.Application;
@@ -44,11 +45,26 @@ class Server {
 
         // Mount table-config routes
         this.app.use('/table-config', tableConfigRoutes);
-
+        this.app.use('/drug', drugRoutes);
     }
 
     async connectToDatabase(): Promise<void> {
         try {
+            // If there's already an active connection, don't call connect again.
+            // In test runs we may reuse an in-memory MongoDB connection, so avoid openUri conflicts.
+            if (mongoose.connection.readyState !== 0) {
+                console.info('Mongoose already has an active connection (readyState=', mongoose.connection.readyState, '). Skipping connect.');
+                // Ensure the connection is alive
+                try {
+                    await mongoose.connection.db?.admin().command({ping: 1});
+                    console.info("Existing MongoDB connection is healthy");
+                    return;
+                } catch (err) {
+                    console.warn('Existing mongoose connection ping failed, attempting reconnect:', err);
+                    // fallthrough to attempt connect
+                }
+            }
+
             console.log("Connecting to database...");
             const clientOptions: ConnectOptions = {serverApi: {version: '1', strict: true, deprecationErrors: true}};
             await connect(this.cfg.MONGODB_SRV, clientOptions);
@@ -61,8 +77,16 @@ class Server {
     }
 
     async disconnectFromDatabase(): Promise<void> {
-        await mongoose.disconnect();
-        console.info("Disconnected from MongoDB Successfully");
+        try {
+            if (mongoose.connection.readyState === 0) {
+                console.info('Mongoose connection already disconnected.');
+                return;
+            }
+            await mongoose.disconnect();
+            console.info("Disconnected from MongoDB Successfully");
+        } catch (err) {
+            console.warn('Error while disconnecting mongoose:', err);
+        }
     }
 
     public start(): void {

@@ -4,7 +4,7 @@ import {DEFAULT_TABLE_CONFIG} from "../config/table-config.defaults";
 import {ITableConfig} from "../interface/table-config";
 
 class TableConfigController {
-    service: typeof TableConfigService;
+    private service: typeof TableConfigService;
 
     constructor(private readonly tableConfigService: typeof TableConfigService) {
         this.service = tableConfigService;
@@ -15,7 +15,7 @@ class TableConfigController {
         if (config) {
             return res.status(200).json(config);
         } else {
-            await this.tableConfigService.createTableConfig(DEFAULT_TABLE_CONFIG);
+            await this.service.createTableConfig(DEFAULT_TABLE_CONFIG);
             return res.status(200).json(DEFAULT_TABLE_CONFIG)
         }
     }

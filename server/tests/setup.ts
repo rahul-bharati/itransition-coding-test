@@ -1,9 +1,12 @@
 import {MongoMemoryServer} from "mongodb-memory-server"
 import {beforeAll, afterAll, it, expect} from "@jest/globals";
+// @ts-ignore
+import path from 'path';
 
 import {AppConfig, loadConfig} from "../src/config/config";
 import server from "../src/app/server";
 import mongoose from "mongoose";
+import {importData} from "../src/utils/import-data";
 
 let mongoServer: MongoMemoryServer;
 
@@ -20,6 +23,10 @@ beforeAll(async () => {
 
     // Connect to the in-memory database
     await server.connectToDatabase();
+
+    // Import test data from tests/mock/data.json using an absolute path and reuse the existing connection
+    const dataPath = path.resolve(__dirname, 'mock', 'data.json');
+    await importData({filePath: dataPath, reuseConnection: true});
 });
 
 afterAll(async () => {
