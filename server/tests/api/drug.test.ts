@@ -11,7 +11,7 @@ import {
     DRUGS_COMPANY_MINDCARE,        // all drugs for "MindCare Pharmaceuticals"
     DRUGS_SEARCH_AMOX,             // search=amox expected list
     DRUGS_SEARCH_METFORMIN,        // search=Metformin expected list
-    DRUGS_TOTAL_COUNT,             // total items in dataset
+    DRUGS_TOTAL_COUNT, DRUGS_COMPANIES,             // total items in dataset
 } from "../mock/data";
 import {stripRuntimeFields} from "../utils/normalize";
 
@@ -272,4 +272,16 @@ describe("Drug API", () => {
             expect(resp.status).toBe(400);
         });
     });
+
+
+    describe("GET /drug/companies - Get distinct companies", () => {
+        it('should return list of all unique companies', async () => {
+            const resp = await request(server.app).get("/drug/companies");
+            expect(resp.status).toBe(200);
+            expect(resp.body.items).toEqual(DRUGS_COMPANIES);
+            expect(Array.isArray(resp.body.items)).toBe(true);
+        });
+    });
+
+
 });

@@ -66,7 +66,7 @@ class Server {
             }
 
             console.log("Connecting to database...");
-            const clientOptions: ConnectOptions = {serverApi: {version: '1', strict: true, deprecationErrors: true}};
+            const clientOptions: ConnectOptions = {serverApi: {version: '1', strict: false, deprecationErrors: true}};
             await connect(this.cfg.MONGODB_SRV, clientOptions);
             await mongoose.connection.db?.admin().command({ping: 1});
             console.info("Connected to MongoDB Successfully");

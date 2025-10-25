@@ -214,7 +214,7 @@ const sortByCompanyAsc = (arr: DrugData[]) =>
 
 // Unique sorted company list
 const getCompanies = (arr: DrugData[]) =>
-    Array.from(new Set(arr.map(d => d.company))).sort();
+    Array.from(new Set(arr.map(d => d.company))).sort((a, b) => a.localeCompare(b, "en", {sensitivity: "base"}));
 
 /**
  * Derived expected constants for tests

@@ -65,9 +65,9 @@ class DrugService {
         if (finalParams.search) {
             const searchRegex = new RegExp(finalParams.search, 'i');
             filterOptions.$or = [
-                { genericName: searchRegex },
-                { brandName: searchRegex },
-                { code: searchRegex },
+                {genericName: searchRegex},
+                {brandName: searchRegex},
+                {code: searchRegex},
             ];
         }
 
@@ -84,8 +84,8 @@ class DrugService {
         if (finalParams.sortBy === 'company') {
             documents = await this.drug
                 .find(filterOptions)
-                .collation({ locale: 'en', strength: 2 })
-                .sort({ company: dir, _id: dir })
+                .collation({locale: 'en', strength: 2})
+                .sort({company: dir, _id: dir})
                 .skip(skip)
                 .limit(finalParams.limit)
                 .select('_id code genericName company brandName launchDate')
@@ -112,7 +112,14 @@ class DrugService {
             launchDate: new Date(doc.launchDate).toISOString().slice(0, 10),
         }));
 
-        return { items, totalItems };
+        return {items, totalItems};
+    }
+
+    async getCompanies(): Promise<string[]> {
+        const companies: string[] = await this.drug.distinct("company");
+        return Array.from(
+            new Map(companies.map((c) => [c.trim().toLowerCase(), c.trim()])).values()
+        ).sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
     }
 }
 

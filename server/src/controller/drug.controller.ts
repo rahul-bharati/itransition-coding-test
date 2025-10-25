@@ -50,6 +50,19 @@ class DrugController {
             return res.status(500).json({error: 'Internal server error'});
         }
     }
+
+    async getCompanies(req: Request, res: Response) {
+        try {
+            const companies = await this.service.getCompanies();
+            const response = {
+                items: companies,
+            }
+            return res.status(200).json(response);
+        } catch (error) {
+            console.error('Error in DrugController.getCompanies:', error);
+            return res.status(500).json({error: 'Internal server error'});
+        }
+    }
 }
 
 export default DrugController;

@@ -15,6 +15,7 @@ class DrugRoutes {
     initializeRoutes(): void {
         // bind controller methods to preserve `this`
         this.router.get("/", this.controller.get.bind(this.controller))
+        this.router.get('/companies', this.controller.getCompanies.bind(this.controller))
     }
 }
 
