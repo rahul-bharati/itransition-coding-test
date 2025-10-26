@@ -99,7 +99,7 @@ function Drugs() {
         const config = await fetchTableConfig();
         const updatedColumns = config.columns.map((col) => ({
           ...col,
-          visible: columnVisibility[col.key] !== false,
+          visible: columnVisibility[col.key],
         }));
         await updateTableConfig({ columns: updatedColumns });
       } catch (error) {
