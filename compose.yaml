@@ -18,6 +18,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:80"
+    environment:
+      - API_BACKEND_URL=http://server:3000
     depends_on:
       - server
     networks:
