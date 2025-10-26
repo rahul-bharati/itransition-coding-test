@@ -25,5 +25,11 @@ services:
     dockerfilePath: ./app/Dockerfile
     dockerContext: ./app
     plan: free
+    envVars:
+      - key: API_BACKEND_URL
+        fromService:
+          type: web
+          name: itransition-server
+          envVarKey: RENDER_EXTERNAL_URL
 
 
