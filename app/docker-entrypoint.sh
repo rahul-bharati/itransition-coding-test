@@ -8,14 +8,18 @@ if [ -z "$API_BACKEND_URL" ]; then
   export API_BACKEND_URL="http://server:3000"
 fi
 
-echo "Using backend URL: $API_BACKEND_URL"
+echo "======================================="
+echo "Backend URL: $API_BACKEND_URL"
+echo "======================================="
 
 # Replace the placeholder in nginx config template and output to actual config
-envsubst '$API_BACKEND_URL' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+# Note: Using ${API_BACKEND_URL} syntax to match the template
+envsubst '${API_BACKEND_URL}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 
 # Show the generated config for debugging
 echo "Generated nginx config:"
 cat /etc/nginx/conf.d/default.conf
+echo "======================================="
 
 # Test nginx configuration
 nginx -t

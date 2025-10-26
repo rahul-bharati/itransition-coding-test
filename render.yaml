@@ -27,9 +27,8 @@ services:
     plan: free
     envVars:
       - key: API_BACKEND_URL
-        fromService:
-          type: web
-          name: itransition-server
-          envVarKey: RENDER_EXTERNAL_URL
+        # This will be set to the backend service URL
+        # You can manually set it after deployment or use Render's service references
+        sync: false
 
 
