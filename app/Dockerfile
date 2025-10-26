@@ -13,6 +13,10 @@ RUN pnpm install --frozen-lockfile
 # Copy source code
 COPY . .
 
+# Accept build arg for API backend URL
+ARG VITE_API_BACKEND_URL
+ENV VITE_API_BACKEND_URL=$VITE_API_BACKEND_URL
+
 # Build the production bundle (dist/)
 RUN pnpm run build
 

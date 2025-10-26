@@ -3,8 +3,8 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    expose:
-      - "3000"
+    ports:
+      - "3000:3000"
     environment:
       - NODE_ENV=production
       - PORT=3000
@@ -16,10 +16,12 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
+      args:
+        - VITE_API_BACKEND_URL=http://localhost:3000
     ports:
       - "8080:80"
     environment:
-      - API_BACKEND_URL=http://server:3000
+      - PORT=80
     depends_on:
       - server
     networks:

@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { DrugType } from "@/interface/drugType.ts";
 
-const BASE_URL_API = "";
+const BASE_URL_API = import.meta.env.VITE_API_BACKEND_URL || "";
 
 export interface DataResponse {
   items: DrugType[];
