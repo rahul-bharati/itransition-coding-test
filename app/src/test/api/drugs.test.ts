@@ -28,7 +28,7 @@ describe("Drugs API", () => {
 
       const result = await fetchDrugs();
 
-      expect(axios.get).toHaveBeenCalledWith("http://localhost:3000/drug", {
+      expect(axios.get).toHaveBeenCalledWith("/api/drug", {
         params: undefined,
       });
       expect(result).toEqual(mockResponse.data);
@@ -46,7 +46,7 @@ describe("Drugs API", () => {
 
       await fetchDrugs({ page: 2, limit: 20 });
 
-      expect(axios.get).toHaveBeenCalledWith("http://localhost:3000/drug", {
+      expect(axios.get).toHaveBeenCalledWith("/api/drug", {
         params: { page: 2, limit: 20 },
       });
     });
@@ -63,7 +63,7 @@ describe("Drugs API", () => {
 
       await fetchDrugs({ sortBy: "genericName", sortOrder: "asc" });
 
-      expect(axios.get).toHaveBeenCalledWith("http://localhost:3000/drug", {
+      expect(axios.get).toHaveBeenCalledWith("/api/drug", {
         params: { sortBy: "genericName", sortOrder: "asc" },
       });
     });
@@ -80,7 +80,7 @@ describe("Drugs API", () => {
 
       await fetchDrugs({ company: "CardioMed Pharmaceuticals" });
 
-      expect(axios.get).toHaveBeenCalledWith("http://localhost:3000/drug", {
+      expect(axios.get).toHaveBeenCalledWith("/api/drug", {
         params: { company: "CardioMed Pharmaceuticals" },
       });
     });
@@ -97,7 +97,7 @@ describe("Drugs API", () => {
 
       await fetchDrugs({ search: "Amoxicillin" });
 
-      expect(axios.get).toHaveBeenCalledWith("http://localhost:3000/drug", {
+      expect(axios.get).toHaveBeenCalledWith("/api/drug", {
         params: { search: "Amoxicillin" },
       });
     });
@@ -123,7 +123,7 @@ describe("Drugs API", () => {
 
       await fetchDrugs(params);
 
-      expect(axios.get).toHaveBeenCalledWith("http://localhost:3000/drug", {
+      expect(axios.get).toHaveBeenCalledWith("/api/drug", {
         params,
       });
     });
@@ -148,9 +148,7 @@ describe("Drugs API", () => {
 
       const result = await fetchCompanies();
 
-      expect(axios.get).toHaveBeenCalledWith(
-        "http://localhost:3000/drug/companies",
-      );
+      expect(axios.get).toHaveBeenCalledWith("/api/drug/companies");
       expect(result).toEqual(mockResponse.data);
     });
 
@@ -172,9 +170,7 @@ describe("Drugs API", () => {
 
       const result = await fetchTableConfig();
 
-      expect(axios.get).toHaveBeenCalledWith(
-        "http://localhost:3000/table-config",
-      );
+      expect(axios.get).toHaveBeenCalledWith("/api/table-config");
       expect(result).toEqual(mockTableConfig);
     });
 
@@ -204,7 +200,7 @@ describe("Drugs API", () => {
       const result = await updateTableConfig(updatedConfig);
 
       expect(axios.patch).toHaveBeenCalledWith(
-        "http://localhost:3000/table-config",
+        "/api/table-config",
         updatedConfig,
       );
       expect(result).toEqual(updatedConfig);

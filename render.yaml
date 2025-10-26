@@ -1,0 +1,29 @@
+# Render Blueprint for Free Deployment
+# This file defines both services and their configuration
+
+services:
+  # Backend API Service
+  - type: web
+    name: itransition-server
+    runtime: docker
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: MONGODB_SRV
+        sync: false  # You'll add this in Render dashboard
+    healthCheckPath: /api/health
+    plan: free
+
+  # Frontend App Service (with nginx reverse proxy)
+  - type: web
+    name: itransition-app
+    runtime: docker
+    dockerfilePath: ./app/Dockerfile
+    dockerContext: ./app
+    plan: free
+
+

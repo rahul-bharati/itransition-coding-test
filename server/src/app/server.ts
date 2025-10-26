@@ -38,14 +38,14 @@ class Server {
 
     setUpRoutes(): void {
         // Define your routes here
-        this.app.get('/health', (req, res) => {
+        this.app.get('/api/health', (req, res) => {
             console.log("Health check requested");
             res.status(200).send({status: 'OK'});
         })
 
         // Mount table-config routes
-        this.app.use('/table-config', tableConfigRoutes);
-        this.app.use('/drug', drugRoutes);
+        this.app.use('/api/table-config', tableConfigRoutes);
+        this.app.use('/api/drug', drugRoutes);
     }
 
     async connectToDatabase(): Promise<void> {

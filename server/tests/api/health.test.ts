@@ -3,8 +3,8 @@ import server from "../../src/app/server";
 import request from "supertest";
 
 describe("Health API", () => {
-    it('GET /heath', async () => {
-        const res = await request(server.app).get('/health');
+    it('GET /api/health', async () => {
+        const res = await request(server.app).get('/api/health');
         expect(res.status).toBe(200);
     });
 })

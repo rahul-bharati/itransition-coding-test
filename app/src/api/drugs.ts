@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { DrugType } from "@/interface/drugType.ts";
 
-const BASE_URL_API = "http://localhost:3000";
+const BASE_URL_API = "";
 
 export interface DataResponse {
   items: DrugType[];
@@ -31,23 +31,26 @@ export interface TableConfig {
 export const fetchDrugs = async (
   params?: DrugsQueryParams,
 ): Promise<DataResponse> => {
-  const response = await axios.get(`${BASE_URL_API}/drug`, { params });
+  const response = await axios.get(`${BASE_URL_API}/api/drug`, { params });
   return response.data;
 };
 
 export const fetchCompanies = async (): Promise<{ items: string[] }> => {
-  const response = await axios.get(`${BASE_URL_API}/drug/companies`);
+  const response = await axios.get(`${BASE_URL_API}/api/drug/companies`);
   return response.data;
 };
 
 export const fetchTableConfig = async (): Promise<TableConfig> => {
-  const response = await axios.get(`${BASE_URL_API}/table-config`);
+  const response = await axios.get(`${BASE_URL_API}/api/table-config`);
   return response.data;
 };
 
 export const updateTableConfig = async (
   config: TableConfig,
 ): Promise<TableConfig> => {
-  const response = await axios.patch(`${BASE_URL_API}/table-config`, config);
+  const response = await axios.patch(
+    `${BASE_URL_API}/api/table-config`,
+    config,
+  );
   return response.data;
 };
