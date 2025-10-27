@@ -34,7 +34,9 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf.template
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+# Ensure line endings are UNIX-style (remove CR) and make script executable. This
+# prevents '/bin/sh^M: bad interpreter' when the file has CRLF from Windows/WSL.
+RUN sed -i 's/\r$//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh
 
 # Expose port
 EXPOSE 80
